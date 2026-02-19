@@ -1,8 +1,8 @@
-# itsyhome Even G2
+# Itsyhome Even G2
 
 > See also: [G2 development notes](https://github.com/nickustinov/even-g2-notes/blob/main/G2.md) – hardware specs, UI system, input handling and practical patterns for Even Realities G2.
 
-HomeKit and Home Assistant device controls for [Even Realities G2](https://www.evenrealities.com/) smart glasses via the [itsyhome](https://itsyhome.app) HTTP API.
+HomeKit and Home Assistant device controls for [Even Realities G2](https://www.evenrealities.com/) smart glasses via the [Itsyhome](https://itsyhome.app) HTTP API.
 
 Browse rooms, view sensor readings, and control lights, switches, fans, blinds, locks, thermostats and garage doors – all from your glasses.
 
@@ -86,7 +86,7 @@ npm install
 npm run dev
 ```
 
-Opens on `http://localhost:5173`. Set the server URL in the settings panel (default `http://localhost:8423`), verify the connection shows "Connected", then click **Connect itsyhome**.
+Opens on `http://localhost:5173`. Set the server URL in the settings panel (default `http://localhost:8423`), verify the connection shows "Connected", then click **Connect Itsyhome**.
 
 ### 3. G2 simulator
 
@@ -118,4 +118,4 @@ State refreshes automatically every 30 seconds.
 
 - **G2 frontend:** TypeScript + [Even Hub SDK](https://www.npmjs.com/package/@evenrealities/even_hub_sdk)
 - **Settings UI:** React + [@jappyjan/even-realities-ui](https://www.npmjs.com/package/@jappyjan/even-realities-ui)
-- **Smart home API:** [itsyhome](https://itsyhome.app) webhook server (HomeKit + Home Assistant)
+- **Smart home API:** [Itsyhome](https://itsyhome.app) webhook server (HomeKit + Home Assistant)

@@ -23,31 +23,31 @@ export function createHomeActions(setStatus: SetStatus): AppActions {
 
   return {
     async connect() {
-      setStatus('itsyhome: connecting to Even bridge...')
-      appendEventLog('itsyhome: connect requested')
+      setStatus('Itsyhome: connecting to Even bridge...')
+      appendEventLog('Itsyhome: connect requested')
 
       try {
         const bridge = await withTimeout(waitForEvenAppBridge(), 6000)
         await initApp(bridge)
         connected = true
-        setStatus('itsyhome: connected. Tap=actions, DblTap=refresh.')
-        appendEventLog('itsyhome: connected to bridge')
+        setStatus('Itsyhome: connected. Tap=actions, DblTap=refresh.')
+        appendEventLog('Itsyhome: connected to bridge')
       } catch (err) {
         console.error('[itsyhome] connect failed', err)
-        setStatus('itsyhome: bridge not found. Running in mock mode.')
-        appendEventLog('itsyhome: connection failed')
+        setStatus('Itsyhome: bridge not found. Running in mock mode.')
+        appendEventLog('Itsyhome: connection failed')
       }
     },
     async action() {
       if (!connected) {
-        setStatus('itsyhome: not connected')
-        appendEventLog('itsyhome: action blocked (not connected)')
+        setStatus('Itsyhome: not connected')
+        appendEventLog('Itsyhome: action blocked (not connected)')
         return
       }
 
       await refreshState()
-      setStatus('itsyhome: home state refreshed')
-      appendEventLog('itsyhome: manual refresh via action button')
+      setStatus('Itsyhome: home state refreshed')
+      appendEventLog('Itsyhome: manual refresh via action button')
     },
   }
 }

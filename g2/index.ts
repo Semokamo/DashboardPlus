@@ -3,11 +3,11 @@ import type { AppModule } from '../_shared/app-types'
 
 export const app: AppModule = {
   id: 'itsyhome',
-  name: 'itsyhome',
+  name: 'Itsyhome',
   pageTitle: 'Settings',
-  connectLabel: 'Connect itsyhome',
+  connectLabel: 'Connect Itsyhome',
   actionLabel: 'Refresh',
-  initialStatus: 'itsyhome ready',
+  initialStatus: 'Itsyhome ready',
   createActions: createHomeActions,
 }
 

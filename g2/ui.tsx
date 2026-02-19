@@ -82,7 +82,7 @@ function SettingsPanel() {
     <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
       <Card style={{ width: '100%' }}>
         <CardHeader>
-          <Text variant="title-1">itsyhome server</Text>
+          <Text variant="title-1">Itsyhome server</Text>
           <Text variant="body-2" style={{ color: 'var(--color-tc-2)', marginTop: '4px', display: 'block' }}>
             URL of the itsyhome-macos webhook server.
           </Text>
@@ -109,7 +109,7 @@ function SettingsPanel() {
       <Card style={{ width: '100%' }}>
         <CardContent>
           <Button variant="primary" style={{ width: '100%' }} onClick={handleConnect}>
-            Connect itsyhome
+            Connect Itsyhome
           </Button>
         </CardContent>
       </Card>
