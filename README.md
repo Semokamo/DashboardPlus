@@ -105,12 +105,8 @@ Opens on `http://localhost:5173`. Set the server URL in the settings panel (defa
 Requires [even-dev](https://github.com/BxNxM/even-dev) (Unified Even Hub Simulator v0.0.2).
 
 ```bash
-# Copy into even-dev (adjust paths to your local setup)
-cp -r "$(pwd)/g2" /path/to/even-dev/apps/itsyhome
-
-# Run
 cd /path/to/even-dev
-APP_NAME=itsyhome ./start-even.sh
+APP_PATH=../itsyhome-even-g2 ./start-even.sh
 ```
 
 ## Glasses UI
