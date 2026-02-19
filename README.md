@@ -6,6 +6,18 @@ HomeKit and Home Assistant device controls for [Even Realities G2](https://www.e
 
 Browse rooms, view sensor readings, and control lights, switches, fans, blinds, locks, thermostats and garage doors – all from your glasses.
 
+<p>
+  <img src="screenshots/dashboard.png" width="49%" />
+  <img src="screenshots/light.png" width="49%" />
+</p>
+<p>
+  <img src="screenshots/thermostat.png" width="49%" />
+  <img src="screenshots/presets.png" width="49%" />
+</p>
+<p>
+  <img src="screenshots/blinds.png" width="49%" />
+</p>
+
 ## System architecture
 
 ```
