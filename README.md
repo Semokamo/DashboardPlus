@@ -100,7 +100,15 @@ npm run dev
 
 Opens on `http://localhost:5173`. Set the server URL in the settings panel (default `http://localhost:8423`), verify the connection shows "Connected", then click **Connect Itsyhome**.
 
-### 3. G2 simulator
+### 3. Running on glasses
+
+In a second terminal, generate a QR code and scan it with the Even App:
+
+```bash
+npx evenhub qr --http --ip <your-local-ip> --port 5173
+```
+
+### 4. G2 simulator
 
 Requires [even-dev](https://github.com/BxNxM/even-dev) (Unified Even Hub Simulator v0.0.2).
 
