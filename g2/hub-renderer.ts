@@ -15,6 +15,7 @@ import {
   STATUS_X,
 } from './layout'
 import { bridge, currentSection, state } from './hub-state'
+import { isTelegramLoggedIn } from '../_shared/telegram-auth'
 
 async function rebuildPage(config: {
   containerTotalNum: number
@@ -103,6 +104,94 @@ export async function showDashboard(): Promise<void> {
   })
 
   appendEventLog(`Dashboard: selected ${labels[state.currentSectionIndex] ?? 'none'}`)
+}
+
+export async function showDetail(): Promise<void> {
+  state.screen = 'detail'
+
+  const selected = currentSection()
+  if (!selected) {
+    await showDashboard()
+    return
+  }
+
+  if (selected.name === 'Telegram') {
+    if (!isTelegramLoggedIn()) {
+      await rebuildPage({
+        containerTotalNum: 1,
+        textObject: [
+          new TextContainerProperty({
+            containerID: 1,
+            containerName: 'detail',
+            content: 'Telegram\n\nPlease log in from the application.\n\nDouble-tap to go back.',
+            xPosition: 0,
+            yPosition: 0,
+            width: DISPLAY_WIDTH,
+            height: DISPLAY_HEIGHT,
+            isEventCapture: 1,
+            paddingLength: 4,
+          }),
+        ],
+      })
+    } else {
+      await rebuildPage({
+        containerTotalNum: 2,
+        textObject: [
+          new TextContainerProperty({
+            containerID: 1,
+            containerName: 'telegramHeader',
+            content: 'Telegram',
+            xPosition: 0,
+            yPosition: 0,
+            width: DISPLAY_WIDTH,
+            height: 44,
+            isEventCapture: 0,
+            paddingLength: 4,
+          }),
+        ],
+        listObject: [
+          new ListContainerProperty({
+            containerID: 2,
+            containerName: 'telegramMenu',
+            xPosition: 0,
+            yPosition: 44,
+            width: DISPLAY_WIDTH,
+            height: DISPLAY_HEIGHT - 44,
+            borderWidth: 1,
+            borderColor: 5,
+            borderRdaius: 4,
+            paddingLength: 4,
+            isEventCapture: 1,
+            itemContainer: new ListItemContainerProperty({
+              itemCount: 3,
+              itemWidth: DISPLAY_WIDTH - 10,
+              isItemSelectBorderEn: 1,
+              itemName: ['Channels', 'Chats', 'Groups'],
+            }),
+          }),
+        ],
+      })
+    }
+  } else {
+    await rebuildPage({
+      containerTotalNum: 1,
+      textObject: [
+        new TextContainerProperty({
+          containerID: 1,
+          containerName: 'detail',
+          content: `${selected.name}\n\n`,
+          xPosition: 0,
+          yPosition: 0,
+          width: DISPLAY_WIDTH,
+          height: DISPLAY_HEIGHT,
+          isEventCapture: 1,
+          paddingLength: 4,
+        }),
+      ],
+    })
+  }
+
+  appendEventLog(`Detail: opened ${selected.name}`)
 }
 
 export async function showLoading(message: string): Promise<void> {

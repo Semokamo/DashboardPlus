@@ -5,13 +5,14 @@ export type HubSection = {
   preview: string
 }
 
-export type Screen = 'dashboard' | 'loading'
+export type Screen = 'dashboard' | 'detail' | 'loading'
 
 export type State = {
   screen: Screen
   startupRendered: boolean
   sections: HubSection[]
   currentSectionIndex: number
+  armedSectionIndex: number | null
 }
 
 export const state: State = {
@@ -19,6 +20,7 @@ export const state: State = {
   startupRendered: false,
   sections: [],
   currentSectionIndex: 0,
+  armedSectionIndex: null,
 }
 
 export let bridge: EvenAppBridge | null = null

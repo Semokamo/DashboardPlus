@@ -6,6 +6,10 @@ import { state, setBridge } from './hub-state'
 
 const STATIC_SECTIONS = [
   {
+    name: 'Home',
+    preview: 'Home\n\nDashboardPlus home screen.\nQuick overview and shortcuts\nwill live here.\n\nMode: home overview mock',
+  },
+  {
     name: 'Telegram',
     preview: 'Telegram\n\nRecent chats\nNadia: Landing in 20 min\nDesign Team: Mock approved\nSaved Messages: Buy coffee\n\nMode: messaging feed mock',
   },
@@ -24,6 +28,7 @@ export async function refreshState(): Promise<void> {
   if (state.currentSectionIndex >= state.sections.length) {
     state.currentSectionIndex = 0
   }
+  state.armedSectionIndex = null
 
   appendEventLog(`Hub: loaded ${state.sections.length} sections`)
   await showDashboard()

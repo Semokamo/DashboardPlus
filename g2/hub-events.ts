@@ -1,6 +1,6 @@
 import { OsEventTypeList, type EvenHubEvent } from '@evenrealities/even_hub_sdk'
 import { appendEventLog } from '../_shared/log'
-import { showDashboard, updatePreview } from './hub-renderer'
+import { showDashboard, showDetail, updatePreview } from './hub-renderer'
 import { state } from './hub-state'
 
 export function resolveEventType(event: EvenHubEvent): OsEventTypeList | undefined {
@@ -40,6 +40,7 @@ async function updateSelection(index: number): Promise<void> {
   if (index === state.currentSectionIndex) return
 
   state.currentSectionIndex = index
+  state.armedSectionIndex = index
   appendEventLog(`Hub: selected ${state.sections[index]?.name ?? 'unknown'}`)
   if (state.screen === 'dashboard') {
     await updatePreview()
@@ -100,13 +101,39 @@ async function handleDashboardEvent(event: EvenHubEvent): Promise<void> {
     `Hub: click index=${String(index)} name=${event.listEvent?.currentSelectItemName ?? 'n/a'}`,
   )
   if (index === null) return
+
+  if (index === state.currentSectionIndex && state.armedSectionIndex === index) {
+    state.armedSectionIndex = null
+    await showDetail()
+    return
+  }
+
+  if (index === state.currentSectionIndex) {
+    state.armedSectionIndex = index
+    appendEventLog(`Hub: armed ${state.sections[index]?.name ?? 'unknown'}`)
+    await updatePreview()
+    return
+  }
+
   await updateSelection(index)
+}
+
+async function handleDetailEvent(eventType: OsEventTypeList | undefined): Promise<void> {
+  if (eventType === OsEventTypeList.DOUBLE_CLICK_EVENT) {
+    state.armedSectionIndex = null
+    await showDashboard()
+  }
 }
 
 export function onEvenHubEvent(event: EvenHubEvent): void {
   const eventType = resolveEventType(event)
   appendEventLog(`Event: type=${String(eventType)} screen=${state.screen}`)
   appendEventLog(`Raw: ${JSON.stringify(event.jsonData ?? event.listEvent ?? event.textEvent ?? event.sysEvent ?? {})}`)
+
+  if (state.screen === 'detail') {
+    void handleDetailEvent(eventType)
+    return
+  }
 
   if (eventType === OsEventTypeList.CLICK_EVENT && (event.listEvent || event.jsonData)) {
     void handleDashboardEvent(event)

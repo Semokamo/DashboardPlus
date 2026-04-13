@@ -14,6 +14,7 @@
     "g2/api.ts",
     "g2/app.ts",
     "g2/events.ts",
+    "g2/hub-ui.tsx",
     "g2/navigation.ts",
     "g2/renderer.ts",
     "g2/state.ts",

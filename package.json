@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "dev": "vite --host 0.0.0.0 --port 5173",
+    "telegram:server": "node server/telegram-auth-server.cjs",
     "build": "vite build",
     "preview": "vite preview",
     "sim": "evenhub-simulator",
@@ -14,7 +15,8 @@
     "@evenrealities/even_hub_sdk": "^0.0.7",
     "@jappyjan/even-realities-ui": "^0.0.8",
     "react": "^19.2.4",
-    "react-dom": "^19.2.4"
+    "react-dom": "^19.2.4",
+    "telegram": "^2.26.22"
   },
   "devDependencies": {
     "@evenrealities/evenhub-cli": "^0.1.5",

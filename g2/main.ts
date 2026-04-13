@@ -2,7 +2,7 @@ import { waitForEvenAppBridge } from '@evenrealities/even_hub_sdk'
 import type { AppActions, SetStatus } from '../_shared/app-types'
 import { appendEventLog } from '../_shared/log'
 import { initApp, refreshState } from './hub-app'
-import { initUI } from './hub-ui'
+import { initUI } from './hub-ui-next'
 
 function withTimeout<T>(promise: Promise<T>, timeoutMs: number): Promise<T> {
   return new Promise<T>((resolve, reject) => {

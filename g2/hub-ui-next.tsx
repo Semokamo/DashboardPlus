@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { createRoot } from 'react-dom/client'
 import {
   Card,
@@ -12,10 +12,13 @@ import { refreshState } from './hub-app'
 import {
   TELEGRAM_AUTH_EVENT,
   getTelegramAuthSnapshot,
-  loginWithTelegram,
   logoutTelegram,
   restoreTelegramSession,
+  startTelegramLogin,
+  submitTelegramCode,
+  submitTelegramPassword,
   type TelegramAuthSnapshot,
+  type TelegramLoginResult,
 } from '../_shared/telegram-auth'
 
 function TelegramPanel() {
@@ -25,8 +28,6 @@ function TelegramPanel() {
   const [password, setPassword] = useState('')
   const [status, setStatus] = useState<'idle' | 'checking' | 'code' | 'password' | 'working'>('checking')
   const [error, setError] = useState('')
-  const codeResolver = useRef<((value: string) => void) | null>(null)
-  const passwordResolver = useRef<((value: string) => void) | null>(null)
 
   useEffect(() => {
     void restoreTelegramSession().then(setSnapshot).finally(() => setStatus('idle'))
@@ -41,6 +42,23 @@ function TelegramPanel() {
     }
   }, [])
 
+  const applyLoginResult = (result: TelegramLoginResult) => {
+    if (result.status === 'logged_in') {
+      setSnapshot(result.snapshot)
+      setCode('')
+      setPassword('')
+      setStatus('idle')
+      return
+    }
+
+    if (result.status === 'code_required') {
+      setStatus('code')
+      return
+    }
+
+    setStatus('password')
+  }
+
   const startLogin = async () => {
     if (!phoneNumber.trim()) {
       setError('Enter your phone number first.')
@@ -51,21 +69,8 @@ function TelegramPanel() {
     setStatus('working')
 
     try {
-      const nextSnapshot = await loginWithTelegram({
-        phoneNumber: phoneNumber.trim(),
-        requestCode: () => new Promise<string>((resolve) => {
-          codeResolver.current = resolve
-          setStatus('code')
-        }),
-        requestPassword: () => new Promise<string>((resolve) => {
-          passwordResolver.current = resolve
-          setStatus('password')
-        }),
-      })
-      setSnapshot(nextSnapshot)
-      setCode('')
-      setPassword('')
-      setStatus('idle')
+      const result = await startTelegramLogin(phoneNumber.trim())
+      applyLoginResult(result)
     } catch (loginError) {
       const message = loginError instanceof Error ? loginError.message : String(loginError)
       setError(message)
@@ -73,22 +78,32 @@ function TelegramPanel() {
     }
   }
 
-  const submitCode = () => {
-    if (!codeResolver.current) return
-    const resolve = codeResolver.current
-    codeResolver.current = null
-    resolve(code.trim())
-    setCode('')
+  const submitCode = async () => {
+    if (!code.trim()) return
+    setError('')
     setStatus('working')
+
+    try {
+      const result = await submitTelegramCode(code.trim())
+      applyLoginResult(result)
+    } catch (submitError) {
+      setError(submitError instanceof Error ? submitError.message : String(submitError))
+      setStatus('code')
+    }
   }
 
-  const submitPassword = () => {
-    if (!passwordResolver.current) return
-    const resolve = passwordResolver.current
-    passwordResolver.current = null
-    resolve(password)
-    setPassword('')
+  const submitPassword = async () => {
+    if (!password) return
+    setError('')
     setStatus('working')
+
+    try {
+      const result = await submitTelegramPassword(password)
+      applyLoginResult(result)
+    } catch (submitError) {
+      setError(submitError instanceof Error ? submitError.message : String(submitError))
+      setStatus('password')
+    }
   }
 
   const handleLogout = async () => {
@@ -128,7 +143,7 @@ function TelegramPanel() {
               style={{ width: '100%' }}
             />
             <Button variant="primary" style={{ width: '100%' }} onClick={startLogin} disabled={status !== 'idle'}>
-              {status === 'working' ? 'Working…' : 'Start Telegram login'}
+              {status === 'working' ? 'Working...' : 'Start Telegram login'}
             </Button>
           </>
         )}
