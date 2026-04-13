@@ -40,7 +40,7 @@ async function rebuildPage(config: {
 
 function statusText(status: HomeStatus): string {
   const lines = [
-    'Itsyhome',
+    'DashboardPlus',
     '',
     `${status.rooms} rooms`,
     `${status.accessories} accessories`,

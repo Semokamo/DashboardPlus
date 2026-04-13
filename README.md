@@ -1,8 +1,8 @@
-# Itsyhome Even G2
+# DashboardPlus
 
 > See also: [G2 development notes](https://github.com/nickustinov/even-g2-notes/blob/main/G2.md) – hardware specs, UI system, input handling and practical patterns for Even Realities G2.
 
-HomeKit and Home Assistant device controls for [Even Realities G2](https://www.evenrealities.com/) smart glasses via the [Itsyhome](https://itsyhome.app) HTTP API.
+DashboardPlus is a glasses-first dashboard shell for [Even Realities G2](https://www.evenrealities.com/) smart glasses.
 
 Browse rooms, view sensor readings, and control lights, switches, fans, blinds, locks, thermostats and garage doors – all from your glasses.
 
@@ -98,7 +98,7 @@ npm install
 npm run dev
 ```
 
-Opens on `http://localhost:5173`. Set the server URL in the settings panel (default `http://localhost:8423`), verify the connection shows "Connected", then click **Connect Itsyhome**.
+Opens on `http://localhost:5173`. If Vite chooses another port, use that one when launching the simulator and then click **Connect DashboardPlus**.
 
 ### 3. Running on glasses
 
@@ -114,7 +114,7 @@ Requires [even-dev](https://github.com/BxNxM/even-dev) (Unified Even Hub Simulat
 
 ```bash
 cd /path/to/even-dev
-APP_PATH=../itsyhome-even-g2 ./start-even.sh
+APP_PATH=../DashboardPlus ./start-even.sh
 ```
 
 ## Glasses UI
@@ -134,4 +134,4 @@ State refreshes automatically every 30 seconds.
 
 - **G2 frontend:** TypeScript + [Even Hub SDK](https://www.npmjs.com/package/@evenrealities/even_hub_sdk)
 - **Settings UI:** React + [@jappyjan/even-realities-ui](https://www.npmjs.com/package/@jappyjan/even-realities-ui)
-- **Smart home API:** [Itsyhome](https://itsyhome.app) webhook server (HomeKit + Home Assistant)
+- **Prototype sections:** Telegram, AI, and News
