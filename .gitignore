@@ -1,3 +1,6 @@
 node_modules/
 dist/
 *.ehpk
+*.log
+.env.local
+server/telegram-session.json

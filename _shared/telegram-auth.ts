@@ -6,6 +6,14 @@ export type TelegramAuthSnapshot = {
   userLabel: string | null
 }
 
+export type TelegramDialogKind = 'channels' | 'chats' | 'groups'
+
+export type TelegramDialogItem = {
+  id: string
+  title: string
+  updatedAt: string | null
+}
+
 function canUseStorage(): boolean {
   return typeof window !== 'undefined' && typeof window.localStorage !== 'undefined'
 }
@@ -169,4 +177,10 @@ export async function submitTelegramPassword(password: string): Promise<Telegram
 export async function logoutTelegram(): Promise<void> {
   await postJson<{ ok: true }>('/api/telegram/logout')
   applySnapshot({ loggedIn: false, userLabel: null })
+}
+
+export async function fetchTelegramDialogs(kind: TelegramDialogKind): Promise<TelegramDialogItem[]> {
+  const response = await fetch(`/api/telegram/dialogs?kind=${encodeURIComponent(kind)}`)
+  const data = await readJson<{ items: TelegramDialogItem[] }>(response)
+  return data.items
 }

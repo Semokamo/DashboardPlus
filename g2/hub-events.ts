@@ -1,6 +1,6 @@
 import { OsEventTypeList, type EvenHubEvent } from '@evenrealities/even_hub_sdk'
 import { appendEventLog } from '../_shared/log'
-import { showDashboard, showDetail, updatePreview } from './hub-renderer'
+import { showDashboard, showDetail, showTelegramDialogList, updatePreview } from './hub-renderer'
 import { state } from './hub-state'
 
 export function resolveEventType(event: EvenHubEvent): OsEventTypeList | undefined {
@@ -52,6 +52,8 @@ function resolveSelectedIndex(event: EvenHubEvent): number | null {
   if (typeof indexFromList === 'number') return indexFromList
 
   const raw = (event.jsonData ?? {}) as Record<string, unknown>
+  const containerName = typeof raw.containerName === 'string' ? raw.containerName : null
+  const containerId = typeof raw.containerID === 'number' ? raw.containerID : null
   const rawIndex =
     raw.currentSelectItemIndex ??
     raw.current_select_item_index ??
@@ -80,8 +82,8 @@ function resolveSelectedIndex(event: EvenHubEvent): number | null {
   }
 
   const isBareSectionsClick =
-    raw.containerName === 'sections' &&
-    raw.containerID === 1 &&
+    containerName === 'sections' &&
+    containerId === 1 &&
     raw.currentSelectItemIndex === undefined &&
     raw.current_select_item_index === undefined &&
     raw.selectIndex === undefined &&
@@ -89,6 +91,19 @@ function resolveSelectedIndex(event: EvenHubEvent): number | null {
     !selectedName
 
   if (isBareSectionsClick) {
+    return 0
+  }
+
+  const isBareTelegramMenuClick =
+    containerName === 'telegramMenu' &&
+    containerId === 2 &&
+    raw.currentSelectItemIndex === undefined &&
+    raw.current_select_item_index === undefined &&
+    raw.selectIndex === undefined &&
+    raw.selectedIndex === undefined &&
+    !selectedName
+
+  if (isBareTelegramMenuClick) {
     return 0
   }
 
@@ -118,8 +133,31 @@ async function handleDashboardEvent(event: EvenHubEvent): Promise<void> {
   await updateSelection(index)
 }
 
-async function handleDetailEvent(eventType: OsEventTypeList | undefined): Promise<void> {
+async function handleDetailEvent(eventType: OsEventTypeList | undefined, event: EvenHubEvent): Promise<void> {
+  if (
+    state.currentSectionIndex >= 0 &&
+    state.sections[state.currentSectionIndex]?.name === 'Telegram' &&
+    eventType === OsEventTypeList.CLICK_EVENT
+  ) {
+    const index = resolveSelectedIndex(event)
+    if (state.telegramView === 'root') {
+      if (index === 0) {
+        await showTelegramDialogList('channels')
+      } else if (index === 1) {
+        await showTelegramDialogList('chats')
+      } else if (index === 2) {
+        await showTelegramDialogList('groups')
+      }
+      return
+    }
+  }
+
   if (eventType === OsEventTypeList.DOUBLE_CLICK_EVENT) {
+    if (state.sections[state.currentSectionIndex]?.name === 'Telegram' && state.telegramView === 'list') {
+      await showDetail()
+      return
+    }
+
     state.armedSectionIndex = null
     await showDashboard()
   }
@@ -131,7 +169,7 @@ export function onEvenHubEvent(event: EvenHubEvent): void {
   appendEventLog(`Raw: ${JSON.stringify(event.jsonData ?? event.listEvent ?? event.textEvent ?? event.sysEvent ?? {})}`)
 
   if (state.screen === 'detail') {
-    void handleDetailEvent(eventType)
+    void handleDetailEvent(eventType, event)
     return
   }
 

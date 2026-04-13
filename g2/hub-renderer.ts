@@ -14,8 +14,8 @@ import {
   STATUS_WIDTH,
   STATUS_X,
 } from './layout'
-import { bridge, currentSection, state } from './hub-state'
-import { isTelegramLoggedIn } from '../_shared/telegram-auth'
+import { bridge, currentSection, resetTelegramState, state, type TelegramDialogKind } from './hub-state'
+import { fetchTelegramDialogs, isTelegramLoggedIn } from '../_shared/telegram-auth'
 
 async function rebuildPage(config: {
   containerTotalNum: number
@@ -57,6 +57,7 @@ function dashboardText(): string {
 
 export async function showDashboard(): Promise<void> {
   state.screen = 'dashboard'
+  resetTelegramState()
 
   if (state.sections.length === 0) {
     await showLoading('Loading hub...')
@@ -116,6 +117,10 @@ export async function showDetail(): Promise<void> {
   }
 
   if (selected.name === 'Telegram') {
+    state.telegramView = 'root'
+    state.telegramListKind = null
+    state.telegramItems = []
+
     if (!isTelegramLoggedIn()) {
       await rebuildPage({
         containerTotalNum: 1,
@@ -192,6 +197,96 @@ export async function showDetail(): Promise<void> {
   }
 
   appendEventLog(`Detail: opened ${selected.name}`)
+}
+
+function telegramListTitle(kind: TelegramDialogKind): string {
+  switch (kind) {
+    case 'channels':
+      return 'Channels'
+    case 'chats':
+      return 'Chats'
+    case 'groups':
+      return 'Groups'
+  }
+}
+
+export async function showTelegramDialogList(kind: TelegramDialogKind): Promise<void> {
+  state.screen = 'loading'
+  await showLoading(`Telegram\n\nLoading ${telegramListTitle(kind)}...`)
+
+  try {
+    const items = await fetchTelegramDialogs(kind)
+    const labels = items.map((item) => item.title).slice(0, 25)
+
+    state.screen = 'detail'
+    state.telegramView = 'list'
+    state.telegramListKind = kind
+    state.telegramItems = items
+
+    await rebuildPage({
+      containerTotalNum: 2,
+      textObject: [
+        new TextContainerProperty({
+          containerID: 1,
+          containerName: 'telegramHeader',
+          content: `Telegram / ${telegramListTitle(kind)}`,
+          xPosition: 0,
+          yPosition: 0,
+          width: DISPLAY_WIDTH,
+          height: 44,
+          isEventCapture: 0,
+          paddingLength: 4,
+        }),
+      ],
+      listObject: [
+        new ListContainerProperty({
+          containerID: 2,
+          containerName: 'telegramItems',
+          xPosition: 0,
+          yPosition: 44,
+          width: DISPLAY_WIDTH,
+          height: DISPLAY_HEIGHT - 44,
+          borderWidth: 1,
+          borderColor: 5,
+          borderRdaius: 4,
+          paddingLength: 4,
+          isEventCapture: 1,
+          itemContainer: new ListItemContainerProperty({
+            itemCount: Math.max(labels.length, 1),
+            itemWidth: DISPLAY_WIDTH - 10,
+            isItemSelectBorderEn: 1,
+            itemName: labels.length > 0 ? labels : ['No conversations found'],
+          }),
+        }),
+      ],
+    })
+
+    appendEventLog(`Telegram: loaded ${telegramListTitle(kind)} (${items.length})`)
+  } catch (error) {
+    state.screen = 'detail'
+    state.telegramView = 'root'
+    state.telegramListKind = null
+    state.telegramItems = []
+
+    await rebuildPage({
+      containerTotalNum: 1,
+      textObject: [
+        new TextContainerProperty({
+          containerID: 1,
+          containerName: 'detail',
+          content: `Telegram\n\nUnable to load ${telegramListTitle(kind)}.\n\n${error instanceof Error ? error.message : 'Unknown error'}\n\nDouble-tap to go back.`,
+          xPosition: 0,
+          yPosition: 0,
+          width: DISPLAY_WIDTH,
+          height: DISPLAY_HEIGHT,
+          isEventCapture: 1,
+          paddingLength: 4,
+        }),
+      ],
+    })
+
+    appendEventLog(`Telegram: failed to load ${telegramListTitle(kind)}`)
+  }
 }
 
 export async function showLoading(message: string): Promise<void> {

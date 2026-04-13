@@ -198,10 +198,6 @@ function OverviewPanel() {
     void refreshState()
   }
 
-  const handleConnect = () => {
-    document.getElementById('connectBtn')?.click()
-  }
-
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
       <Card style={{ width: '100%' }}>
@@ -226,9 +222,6 @@ function OverviewPanel() {
           <Text variant="title-1">Controls</Text>
         </CardHeader>
         <CardContent style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-          <Button variant="primary" style={{ width: '100%' }} onClick={handleConnect}>
-            Connect DashboardPlus
-          </Button>
           <Button variant="default" style={{ width: '100%' }} onClick={handleRefresh}>
             Reload static sections
           </Button>
@@ -248,7 +241,7 @@ export function initUI(): void {
   }
 
   const connectBtn = document.getElementById('connectBtn')
-  if (connectBtn) connectBtn.style.display = 'none'
+  if (connectBtn) connectBtn.remove()
   const eventLog = document.getElementById('event-log')
   if (eventLog) {
     eventLog.removeAttribute('hidden')
