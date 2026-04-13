@@ -1,7 +1,7 @@
 {
   "package_id": "com.itsyhome.eveng2",
   "edition": "202601",
-  "name": "Itsyhome",
+  "name": "DashboardPlus",
   "version": "1.0.0",
   "min_app_version": "0.1.0",
   "tagline": "HomeKit and Home Assistant controls for Even G2",

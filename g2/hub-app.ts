@@ -1,21 +1,21 @@
 import type { EvenAppBridge } from '@evenrealities/even_hub_sdk'
 import { appendEventLog } from '../_shared/log'
-import { showDashboard } from './renderer'
-import { onEvenHubEvent } from './events'
-import { state, setBridge } from './state'
+import { onEvenHubEvent } from './hub-events'
+import { showDashboard } from './hub-renderer'
+import { state, setBridge } from './hub-state'
 
 const STATIC_SECTIONS = [
   {
     name: 'Telegram',
-    preview: 'Telegram\n\nInbox preview\nLast chats will appear here.\n\nPinned:\n- Team updates\n- Family\n- Saved messages',
+    preview: 'Telegram\n\nRecent chats\nNadia: Landing in 20 min\nDesign Team: Mock approved\nSaved Messages: Buy coffee\n\nMode: messaging feed mock',
   },
   {
     name: 'AI',
-    preview: 'AI\n\nAssistant preview\nSummaries, prompts and quick actions\nwill live in this panel.\n\nStatus: static mock for now',
+    preview: 'AI\n\nAssistant queue\n- Summarize meeting notes\n- Draft a quick reply\n- Brainstorm travel ideas\n\nMode: assistant actions mock',
   },
   {
     name: 'News',
-    preview: 'News\n\nHeadline preview\nTop stories and short briefings\nwill show here later.\n\nSource list: placeholder',
+    preview: 'News\n\nMorning brief\nMarkets open higher\nMajor storm weakens offshore\nNew battery lab opens in Toronto\n\nMode: headline digest mock',
   },
 ]
 

@@ -23,8 +23,8 @@ export const state: State = {
 
 export let bridge: EvenAppBridge | null = null
 
-export function setBridge(b: EvenAppBridge): void {
-  bridge = b
+export function setBridge(value: EvenAppBridge): void {
+  bridge = value
 }
 
 export function currentSection(): HubSection | null {

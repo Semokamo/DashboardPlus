@@ -8,5 +8,15 @@
     "esModuleInterop": true,
     "skipLibCheck": true
   },
-  "include": ["src", "g2", "_shared"]
+  "include": ["src", "g2", "_shared"],
+  "exclude": [
+    "g2/actions.ts",
+    "g2/api.ts",
+    "g2/app.ts",
+    "g2/events.ts",
+    "g2/navigation.ts",
+    "g2/renderer.ts",
+    "g2/state.ts",
+    "g2/ui.tsx"
+  ]
 }

@@ -1,10 +1,12 @@
 {
-  "name": "itsyhome-even-g2",
+  "name": "dashboardplus",
   "version": "1.0.0",
   "scripts": {
     "dev": "vite --host 0.0.0.0 --port 5173",
     "build": "vite build",
     "preview": "vite preview",
+    "sim": "evenhub-simulator",
+    "sim:local": "evenhub-simulator http://localhost:5173/",
     "qr": "evenhub qr --http --port 5173",
     "pack": "npm run build && evenhub pack app.json dist -o itsyhome.ehpk"
   },
